@@ -4,27 +4,32 @@ import Categories from '../components/Categories'
 import  Sort from  '../components/Sort'
 import PizzaBlock from '../components/Pizzablock'
 import Skeleton from '../components/Pizzablock/Skeleton'
-
+import Pagination from '../components/Pagination'
+import { SearchContext } from '../App'
 
 
 function Home() {
+const {searchValue}=React.useContext(SearchContext)
 const [items,setItems]=React.useState([])
 const [isLoading,setIsLoading]=React.useState(true)
+const [categoryId,setCategoryId]=React.useState(0)
+const [currentPage,setCurrentPage]=React.useState(1)
 
-let[categoryId,setCategoryId]=React.useState(0)
 const [sortType,setSortType]=React.useState({
   name :'популярности',
   sortProperty :'rating'
 })
 
-console.log(categoryId,sortType)
+
 
 
 React.useEffect(()=>{
   setIsLoading(true)
-  fetch(`https://6437d071894c9029e8c6b2d1.mockapi.io/items?${
-    categoryId > 0 ? `category=${categoryId}`:''}&sortBy=${sortType.sortProperty}&order=desc
-    `
+  const category= categoryId > 0 ? `category=${categoryId}`:''
+
+  const search= searchValue ? `&search=${searchValue}`:''
+
+  fetch(`https://6437d071894c9029e8c6b2d1.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortType.sortProperty}&order=desc${search}`
   )
 .then((res)=>{
   return res.json()
@@ -34,7 +39,13 @@ React.useEffect(()=>{
   setIsLoading(false)
 })
 window.scrollTo(0,0)
-},[categoryId,sortType])
+},[categoryId,sortType,searchValue,currentPage])
+
+const pizzas=items.map((obj)=>(
+ <PizzaBlock key={obj.id} {...obj}
+  /> 
+))
+const skeletons= [...new Array(6)].map((_,index)=> <Skeleton key={index}/>)
 
   return (
     <div>
@@ -46,16 +57,10 @@ window.scrollTo(0,0)
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
           {
-            isLoading ?
-            [...new Array(6)].map((_,index)=> <Skeleton key={index}/>)
-            :items.map((obj)=>(
-               <PizzaBlock key={obj.id} {...obj}
-               /> 
-            ))
+            isLoading ? skeletons:pizzas
           }
-         
-          
-        </div>
+        </div>  
+        <Pagination onChangePage={(number)=>setCurrentPage(number)} />
       </div>
     </div>
   )
