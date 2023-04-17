@@ -1,14 +1,9 @@
 import React from 'react'
 
+
  
 function Categories({value,onChangeCategory}){
 
-  // let[activeIndex,setActiveIndex]=React.useState(0)
-
-
-  // function onClickCategory1(index){
-  //   setActiveIndex(index)
-  // }
 
   let categories=[
     'Все',
