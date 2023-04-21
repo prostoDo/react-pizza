@@ -1,24 +1,30 @@
-import { Link } from 'react-router-dom'
-import logoSvg from '../assets/img/pizza-logo.svg'
-import Search from '../components/Search/index'
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-function Header(){
-    return (
-      <div className="header">
+import logoSvg from "../assets/img/pizza-logo.svg";
+import Search from "../components/Search/index";
+
+function Header() {
+  const { items, totalPrice } = useSelector((state) => state.cart);
+
+  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
+
+  return (
+    <div className="header">
       <div className="container">
-      <Link to ='/'>
-      <div className="header__logo">
-          <img width="38" src={logoSvg} alt="Pizza logo" />
-          <div>
-            <h1>React Pizza</h1>
-            <p>самая вкусная пицца во вселенной</p>
+        <Link to="/">
+          <div className="header__logo">
+            <img width="38" src={logoSvg} alt="Pizza logo" />
+            <div>
+              <h1>React Pizza</h1>
+              <p>самая вкусная пицца во вселенной</p>
+            </div>
           </div>
-        </div>
-      </Link>
-      <Search  />
+        </Link>
+        <Search />
         <div className="header__cart">
-          <Link to ="/cart" className="button button--cart">
-            <span>520 ₽</span>
+          <Link to="/cart" className="button button--cart">
+            <span>{totalPrice}</span>
             <div className="button__delimiter"></div>
             <svg
               width="18"
@@ -27,14 +33,14 @@ function Header(){
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* <path
+              <path
                 d="M6.33333 16.3333C7.06971 16.3333 7.66667 15.7364 7.66667 15C7.66667 14.2636 7.06971 13.6667 6.33333 13.6667C5.59695 13.6667 5 14.2636 5 15C5 15.7364 5.59695 16.3333 6.33333 16.3333Z"
                 stroke="white"
                 strokeWidth="1.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              /> */}
-              {/* <path
+              />
+              <path
                 d="M14.3333 16.3333C15.0697 16.3333 15.6667 15.7364 15.6667 15C15.6667 14.2636 15.0697 13.6667 14.3333 13.6667C13.597 13.6667 13 14.2636 13 15C13 15.7364 13.597 16.3333 14.3333 16.3333Z"
                 stroke="white"
                 strokeWidth="1.8"
@@ -47,16 +53,14 @@ function Header(){
                 strokeWidth="1.8"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              /> */}
+              />
             </svg>
-            <span>3</span>
+            <span>{totalCount}</span>
           </Link>
         </div>
       </div>
     </div>
-    )
-    }
+  );
+}
 
-    
-
-    export default Header
+export default Header;
